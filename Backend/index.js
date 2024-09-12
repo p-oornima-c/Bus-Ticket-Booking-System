@@ -2,61 +2,21 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
-const port =8080
+const PORT =8080
 
-app.get('/',(req,res)=> {
-    res.send('Home Page')
-})
+const userRoute = require('./routes/user')
+const scheduleRoute = require('./routes/schedule')
+const bookingRoute = require('./routes/booking')
+const paymentRoute = require('./routes/payment')
+const adminRoute = require('./routes/admin')
 
-let busData=[]
-let nextId=1
-
-//add buses
-app.post('/addbus',(req,res) => {
-    const {name}=req.body
-    const newBus = {id:nextId++,name}
-    busData.push(newBus)
-    res.status(200).send(newBus)
-})
-
-//All buses
-app.get('/buses',(req,res) => {
-    res.status(200).send(busData)
-})
-
-// Retrieve bus with id
-app.get('/buses/:id',(req,res) => {
-    const bus = busData.find(b => b.id === parseInt(req.params.id))
-    if(!bus){
-        return res.status(404).send('Bus not found')
-    }
-    res.status(200).send(bus)
-})
+app.use('/user',userRoute)
+app.use('/schedules',scheduleRoute)
+app.use('/bookings',bookingRoute)
+app.use('/payments',paymentRoute)
+app.use('/admin',adminRoute)
 
 
-//update bus
-app.put('/buses/:id',(req,res) => {
-    const bus =busData.find(b => b.id === parseInt(req.params.id))
-    if(!bus){
-        return res.status(404).send('Bus not found')
-    }
-    const {name}=req.body
-    bus.name =name
-    res.status(200).send(bus)
-})
-
-//delete bus
-app.delete('/buses/:id',(req,res) => {
-    const index = busData.findIndex(b => b.id === parseInt(req.params.id))
-    if (index === -1){
-        return res.status(404).send('Bus not found')
-    }
-    busData.splice(index,1)
-    return res.status(200).send(busData)
-})
-
-
-
-app.listen(port, ()=> {
-    console.log(`Server running at port : ${port}.. `)
+app.listen(PORT, ()=> {
+    console.log(`Server running at port : ${PORT}.. `)
 })
