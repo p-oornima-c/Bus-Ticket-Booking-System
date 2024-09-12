@@ -11,7 +11,7 @@ router.post('/register',(req,res)=>{
     const {name,email,phoneNumber,username,password}=req.body
     const newUser ={id:userID++,name,email,username,phoneNumber,password}
     userData.push(newUser)
-    res.status(200),send("Registered")
+    res.status(200).send("Registered")
 })
 
 router.get('/login',(req,res)=>{
